@@ -24,16 +24,24 @@ body {
     text-align: center;
     position: relative;
     overflow: hidden;
+    /* コンテンツの高さに合わせて自動調整されるように調整 */
+    display: flex; /* Flexboxを使って内部要素の配置を調整 */
+    flex-direction: column;
+    justify-content: space-between; /* 要素間にスペースを均等に配分 */
 }
 
 /* ページ共通スタイルはそのまま */
 .page {
     display: none;
     animation: fadeIn 0.8s ease-out forwards;
+    flex-grow: 1; /* ページがflex-containerの利用可能なスペースを埋めるようにする */
+    display: flex; /* 各ページもflexにして内部コンテンツを調整 */
+    flex-direction: column;
+    justify-content: center; /* 垂直方向中央寄せ */
 }
 
 .page.active {
-    display: block;
+    display: flex; /* アクティブなページのみflex表示 */
 }
 
 @keyframes fadeIn {
@@ -70,6 +78,10 @@ body {
 }
 
 /* --- 問題ページ --- */
+#question-page {
+    justify-content: flex-start; /* 上寄せにする */
+}
+
 #question-text {
     font-size: 1.8em; /* 少し大きく */
     margin-bottom: 35px;
@@ -112,25 +124,13 @@ body {
     opacity: 0.8; /* 選択済みは少し透過 */
 }
 
-/* 正解・不正解時のスタイル */
-.choice-button.correct {
-    background-color: #4CAF50; /* 緑 */
-    color: #FFFFFF; /* 白文字 */
-    font-weight: bold;
-    box-shadow: 0 5px 10px rgba(0,150,0,0.3);
-}
-
-.choice-button.incorrect {
-    background-color: #FF5252; /* 赤 */
-    color: #FFFFFF; /* 白文字 */
-    font-weight: bold;
-    box-shadow: 0 5px 10px rgba(150,0,0,0.3);
-}
-
 #feedback-area {
     margin-top: 25px;
-    min-height: 120px; /* 解説表示のためのスペースを増やす */
+    min-height: 180px; /* 解説と結果表示のためのスペースをさらに確保 */
     text-align: left;
+    display: flex; /* Flexboxで内部要素を配置 */
+    flex-direction: column;
+    justify-content: flex-start; /* 上寄せにする */
 }
 
 #result-text {
@@ -170,7 +170,7 @@ body {
     cursor: pointer;
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
-    margin-top: 20px; /* 上部にスペース */
+    margin-top: 30px; /* 上方向の余白をさらに増やす */
     display: none; /* 初期状態では非表示 */
 }
 
