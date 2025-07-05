@@ -70,7 +70,7 @@ body {
     padding: 20px 45px;
     font-size: 2em;
     font-weight: bold;
-    color: pink; /* ここをピンク色に変更します！ */
+    color: #FF1493; /* ここを濃いピンクに変更します */
     background-color: #FCD116; /* ジャマイカの黄色 */
     border: none;
     border-radius: 45px;
@@ -78,6 +78,12 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.25);
     transition: all 0.3s ease;
     letter-spacing: 3px;
+}
+
+#start-button:hover {
+    background-color: #E2B800;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.35);
 }
 
 #start-button:hover {
