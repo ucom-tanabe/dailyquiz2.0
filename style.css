@@ -21,49 +21,43 @@ body {
     width: 90%;
     max-width: 650px; /* 少し広げる */
     text-align: center;
-    position: relative;
+    position: relative; /* 子要素のabsolute基準にする場合もあるが、今回は不要 */
     overflow: hidden;
-    display: flex;
+    min-height: 700px; /* コンテンツが少ない場合でも十分な高さを確保 */
+    display: flex; /* #quiz-container もFlexboxでコンテンツを中央寄せ */
     flex-direction: column;
-    min-height: 700px; /* 例えばこれくらいの高さを設定 */
-    /* ページ切り替え時にアニメーションが滑らかになるように調整 */
-    transition: height 0.5s ease-out;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ページ共通スタイル */
 .page {
-    /* ここが重要: 初期状態では非表示 */
+    /* 初期状態は非表示 */
     display: none;
-    animation: fadeIn 0.8s ease-out forwards;
-    flex-grow: 1;
-    display: flex; /* 各ページもflexにして内部コンテンツを調整 */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transform: translateY(20px); /* 初期位置を少しずらす */
+
+    /* Flexboxでページ内のコンテンツを中央寄せ */
+    display: flex; /* これをここに残すことで、activeが付いたときにすぐflexになる */
     flex-direction: column;
-    justify-content: center; /* 垂直方向中央寄せ */
-    padding-bottom: 20px;
+    justify-content: center;
+    align-items: center;
     width: 100%; /* 親要素の幅に合わせて表示 */
     height: 100%; /* 親要素の高さに合わせて表示 */
     box-sizing: border-box; /* paddingを含めて高さ計算 */
-    position: absolute; /* 重ねて表示し、activeクラスで制御 */
-    top: 0;
-    left: 0;
-    opacity: 0; /* 初期は非表示 */
-    transition: opacity 0.5s ease-out; /* フェードイン/アウトのため */
+    padding-bottom: 20px; /* ページ下部に少し余白を追加 */
 }
 
-/* アクティブなページのみ表示 */
+/* アクティブなページのみ表示し、アニメーションを適用 */
 .page.active {
-    display: flex;
-    position: relative; /* active時は通常フローに戻す */
+    display: flex; /* activeになったらFlexboxで表示 */
     opacity: 1;
+    transform: translateY(0); /* 通常位置に戻る */
+    /* アニメーションの衝突を避けるため、fadeInを削除 */
 }
 
-@keyframes fadeIn {
-    /* animationはactiveクラスがついた時だけ実行される想定 */
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- 以下は前回のまま --- */
+/* --- 以下は前回のまま（必要に応じて調整） --- */
 /* --- 表紙ページ --- */
 #cover-page h1 {
     font-size: 4em;
@@ -97,6 +91,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding-top: 20px;
+    /* このページだけコンテンツが上から下に流れるようにしたいのでjustify-contentをflex-startにする */
+    justify-content: flex-start;
 }
 
 #question-text {
