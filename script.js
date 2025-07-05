@@ -8,12 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedbackArea = document.getElementById('feedback-area');
     const resultText = document.getElementById('result-text');
     const explanationText = document.getElementById('explanation-text');
+    const nextQuestionButton = document.getElementById('next-question-button'); // 「次へ」ボタンを追加
     const finalPage = document.getElementById('final-page');
     const finalMessage = document.getElementById('final-message');
     const attemptsCountSpan = document.getElementById('attempts-count');
     const retryButton = document.getElementById('retry-button');
 
-    // クイズの問題データ
+    // クイズの問題データ (変更なし)
     const questions = [
         {
             question: "福祉用具貸与の対象となる「特殊寝台付属品」として、適切でないものは次のうちどれでしょう？",
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentQuestionIndex = 0;
     let attemptsCount = 0;
-    let quizCompleted = false; // クイズが終了したかどうかを示すフラグ
+    let quizCompletedSuccessfully = true; // クイズ全体を通して正解しているかどうかのフラグ
 
     // --- ページの表示・非表示を制御する関数 ---
     function showPage(pageToShow) {
@@ -64,9 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- クイズの開始 ---
     startButton.addEventListener('click', () => {
         attemptsCount++; // 挑戦回数を増やす
-        attemptsCountSpan.textContent = attemptsCount; // 表示を更新
         currentQuestionIndex = 0; // 最初の問題から開始
-        quizCompleted = false; // クイズ未完了にリセット
+        quizCompletedSuccessfully = true; // 新しい挑戦なので、最初は成功とみなす
         loadQuestion();
         showPage(questionPage);
     });
@@ -77,11 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
         questionText.textContent = `問題${currentQuestionIndex + 1}：\n${q.question}`;
         choicesContainer.innerHTML = ''; // 選択肢をクリア
 
-        // フィードバックエリアをリセット
+        // フィードバックエリアと「次へ」ボタンをリセット
         resultText.textContent = '';
         resultText.classList.remove('correct-feedback', 'incorrect-feedback');
         explanationText.textContent = '';
         feedbackArea.style.display = 'none'; // 非表示にする
+        nextQuestionButton.style.display = 'none'; // 「次へ」ボタンも非表示にする
 
         q.choices.forEach((choice, index) => {
             const button = document.createElement('button');
@@ -95,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 選択肢クリック時の処理 ---
     function handleChoiceClick(event) {
-        // すでに選択済み（correct/incorrectクラスがある）の場合は再選択不可
+        // すでに選択済み（selectedクラスがある）の場合は再選択不可
         if (event.target.classList.contains('selected')) {
             return;
         }
@@ -114,33 +115,33 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedButton.classList.add('correct');
             resultText.textContent = '正解！';
             resultText.classList.add('correct-feedback');
-            finalMessage.classList.add('win'); // 最終ページの表示用
-            quizCompleted = true; // 正解したらクイズ完了
         } else {
             selectedButton.classList.add('incorrect');
             resultText.textContent = '不正解...';
             resultText.classList.add('incorrect-feedback');
             // 正しい選択肢も強調表示
             allChoiceButtons[q.correctAnswer].classList.add('correct');
-            finalMessage.classList.add('lose'); // 最終ページの表示用
-            quizCompleted = false; // 不正解ならクイズ未完了
+            quizCompletedSuccessfully = false; // 不正解があったらフラグをfalseにする
         }
         explanationText.textContent = `解説：${q.explanation}`;
 
-        // 次の問題へ、または最終ページへ
-        setTimeout(() => {
-            if (currentQuestionIndex < questions.length - 1) {
-                currentQuestionIndex++;
-                loadQuestion();
-            } else {
-                displayFinalPage();
-            }
-        }, 3000); // 3秒後に次の問題または結果表示
+        // 正誤判定と解説が表示されたら「次へ」ボタンを表示
+        nextQuestionButton.style.display = 'block';
     }
+
+    // --- 「次へ」ボタンクリック時の処理 ---
+    nextQuestionButton.addEventListener('click', () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        } else {
+            displayFinalPage();
+        }
+    });
 
     // --- 最終ページの表示 ---
     function displayFinalPage() {
-        if (quizCompleted) {
+        if (quizCompletedSuccessfully) {
             finalMessage.textContent = 'めんそ～れ～♪';
             finalMessage.classList.add('win');
             finalMessage.classList.remove('lose');
@@ -149,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             finalMessage.classList.add('lose');
             finalMessage.classList.remove('win');
         }
-        attemptsCountSpan.textContent = attemptsCount;
+        attemptsCountSpan.textContent = attemptsCount; // ここで挑戦回数を表示
         showPage(finalPage);
     }
 
@@ -157,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     retryButton.addEventListener('click', () => {
         // すべての状態をリセットして表紙に戻る
         currentQuestionIndex = 0;
-        quizCompleted = false;
+        quizCompletedSuccessfully = true; // リセット
         finalMessage.classList.remove('win', 'lose'); // クラスをリセット
         showPage(coverPage);
     });
