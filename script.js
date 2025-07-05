@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM要素の取得
-    const quizContainer = document.getElementById('quiz-container'); // コンテナも取得
+    // DOM要素の取得 (変更なし)
+    const quizContainer = document.getElementById('quiz-container');
     const coverPage = document.getElementById('cover-page');
     const startButton = document.getElementById('start-button');
     const questionPage = document.getElementById('question-page');
@@ -15,30 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const attemptsCountSpan = document.getElementById('attempts-count');
     const retryButton = document.getElementById('retry-button');
 
-    // クイズの問題データ (変更なし)
+    // クイズの問題データ: 3問目を1問目に表示させるように変更
     const questions = [
-        {
-            question: "福祉用具貸与の対象となる「特殊寝台付属品」として、適切でないものは次のうちどれでしょう？",
-            choices: [
-                "サイドレール",
-                "マットレス",
-                "エアーマット",
-                "特殊寝台用手すり"
-            ],
-            correctAnswer: 3, // 0から始まるインデックス
-            explanation: "福祉用具貸与の対象となる「特殊寝台付属品」は、身体の状況に応じて、特殊寝台と一体的に使用されるものです。マットレスやエアーマットは対象ですが、特殊寝台用手すりは対象外です。手すりは、移動や立ち上がりの補助として用いられ、独立した用具とみなされます。"
-        },
-        {
-            question: "介護保険制度における福祉用具購入費の支給対象とならないものは次のうちどれでしょう？",
-            choices: [
-                "腰掛便座",
-                "入浴補助具",
-                "簡易浴槽",
-                "歩行器"
-            ],
-            correctAnswer: 3,
-            explanation: "介護保険制度における福祉用具購入費の支給対象となるのは、排泄・入浴に関連する特定福祉用具です。歩行器は貸与の対象となる福祉用具であり、購入費の支給対象ではありません。"
-        },
         {
             question: "福祉用具専門相談員が利用者宅を訪問する際の適切な対応として、最も優先すべきものは次のうちどれでしょう？",
             choices: [
@@ -47,34 +25,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 "他の事業所の福祉用具と比較し、自社製品の優位性を強調する。",
                 "契約内容と料金体系について、簡潔に説明し同意を得る。"
             ],
-            correctAnswer: 1,
+            correctAnswer: 1, // 0から始まるインデックス
             explanation: "福祉用具専門相談員は、利用者の自立支援を目的として、その心身の状況、生活環境、家族の介護状況等を把握し、適切な福祉用具を選定することが最も重要です。カタログ提示や自社製品の強調、契約説明はその後に行うべきものです。"
         }
+        // 他の問題は削除済みなので、この1問だけが残ります
     ];
 
     let currentQuestionIndex = 0;
     let attemptsCount = 0;
     let quizCompletedSuccessfully = true;
 
-    // --- ページの表示・非表示を制御する関数 ---
+    // --- ページの表示・非表示を制御する関数 (変更なし) ---
     function showPage(pageToShow) {
         const pages = document.querySelectorAll('.page');
         pages.forEach(page => {
-            page.classList.remove('active'); // activeクラスを削除
-            page.style.display = 'none'; // 非表示にする
+            page.classList.remove('active');
+            page.style.display = 'none';
         });
 
-        // 指定されたページを表示
-        pageToShow.style.display = 'flex'; // Flexboxとして表示
-        setTimeout(() => { // 少し遅延させてopacityとtransformのtransitionが適用されるようにする
+        pageToShow.style.display = 'flex';
+        setTimeout(() => {
             pageToShow.classList.add('active');
         }, 10);
-
-        // コンテナの高さをページのコンテンツに合わせて調整
-        // quizContainer.style.height = pageToShow.offsetHeight + 'px'; // この行はコメントアウトまたは削除
     }
 
-    // --- クイズの開始 ---
+    // --- クイズの開始 (変更なし) ---
     startButton.addEventListener('click', () => {
         attemptsCount++;
         currentQuestionIndex = 0;
@@ -83,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage(questionPage);
     });
 
-    // --- 問題の読み込みと表示 ---
+    // --- 問題の読み込みと表示 (変更なし) ---
     function loadQuestion() {
         const q = questions[currentQuestionIndex];
         questionText.textContent = `問題${currentQuestionIndex + 1}：\n${q.question}`;
@@ -105,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 選択肢クリック時の処理 ---
+    // --- 選択肢クリック時の処理 (変更なし) ---
     function handleChoiceClick(event) {
         if (event.target.classList.contains('selected')) {
             return;
@@ -135,17 +110,12 @@ document.addEventListener('DOMContentLoaded', () => {
         nextQuestionButton.style.display = 'block';
     }
 
-    // --- 「次へ」ボタンクリック時の処理 ---
+    // --- 「次へ」ボタンクリック時の処理 (変更なし) ---
     nextQuestionButton.addEventListener('click', () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            currentQuestionIndex++;
-            loadQuestion();
-        } else {
-            displayFinalPage();
-        }
+        displayFinalPage();
     });
 
-    // --- 最終ページの表示 ---
+    // --- 最終ページの表示 (変更なし) ---
     function displayFinalPage() {
         if (quizCompletedSuccessfully) {
             finalMessage.textContent = 'めんそ～れ～♪';
@@ -160,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage(finalPage);
     }
 
-    // --- 再挑戦ボタンの処理 ---
+    // --- 再挑戦ボタンの処理 (変更なし) ---
     retryButton.addEventListener('click', () => {
         currentQuestionIndex = 0;
         quizCompletedSuccessfully = true;
@@ -168,6 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage(coverPage);
     });
 
-    // 最初に表紙を表示
+    // 最初に表紙を表示 (変更なし)
     showPage(coverPage);
 });
