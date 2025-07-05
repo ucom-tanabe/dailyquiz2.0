@@ -7,7 +7,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* bodyのmin-heightを100vhに設定し、コンテナが画面全体を使えるように */
     min-height: 100vh;
     margin: 0;
     color: #333;
@@ -24,37 +23,51 @@ body {
     text-align: center;
     position: relative;
     overflow: hidden;
-    /* コンテンツの高さに合わせて自動調整されるように調整 */
     display: flex;
     flex-direction: column;
-    /* min-height を設定し、コンテンツが少ない場合でも十分な高さを確保 */
     min-height: 700px; /* 例えばこれくらいの高さを設定 */
+    /* ページ切り替え時にアニメーションが滑らかになるように調整 */
+    transition: height 0.5s ease-out;
 }
 
 /* ページ共通スタイル */
 .page {
+    /* ここが重要: 初期状態では非表示 */
     display: none;
     animation: fadeIn 0.8s ease-out forwards;
-    flex-grow: 1; /* 親要素（#quiz-container）の残りのスペースを埋める */
-    display: flex;
+    flex-grow: 1;
+    display: flex; /* 各ページもflexにして内部コンテンツを調整 */
     flex-direction: column;
     justify-content: center; /* 垂直方向中央寄せ */
-    padding-bottom: 20px; /* ページ下部に少し余白を追加 */
+    padding-bottom: 20px;
+    width: 100%; /* 親要素の幅に合わせて表示 */
+    height: 100%; /* 親要素の高さに合わせて表示 */
+    box-sizing: border-box; /* paddingを含めて高さ計算 */
+    position: absolute; /* 重ねて表示し、activeクラスで制御 */
+    top: 0;
+    left: 0;
+    opacity: 0; /* 初期は非表示 */
+    transition: opacity 0.5s ease-out; /* フェードイン/アウトのため */
 }
 
+/* アクティブなページのみ表示 */
 .page.active {
     display: flex;
+    position: relative; /* active時は通常フローに戻す */
+    opacity: 1;
 }
 
 @keyframes fadeIn {
+    /* animationはactiveクラスがついた時だけ実行される想定 */
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* --- 以下は前回のまま --- */
 /* --- 表紙ページ --- */
 #cover-page h1 {
     font-size: 4em;
-    color: #009246; /* ジャマイカの緑 */
+    color: #009246;
     margin-bottom: 60px;
     text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
 }
@@ -81,9 +94,9 @@ body {
 
 /* --- 問題ページ --- */
 #question-page {
-    justify-content: space-between; /* 要素間に均等なスペースを配分 */
-    align-items: center; /* 水平方向中央寄せ */
-    padding-top: 20px; /* 問題ページの上部に余白を追加 */
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
 }
 
 #question-text {
@@ -94,7 +107,7 @@ body {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 15px;
     border-radius: 10px;
-    flex-shrink: 0; /* 縮まないように設定 */
+    flex-shrink: 0;
 }
 
 #choices-container {
@@ -102,8 +115,8 @@ body {
     flex-direction: column;
     gap: 18px;
     margin-bottom: 30px;
-    width: 100%; /* 親要素の幅いっぱいに広げる */
-    flex-shrink: 0; /* 縮まないように設定 */
+    width: 100%;
+    flex-shrink: 0;
 }
 
 .choice-button {
@@ -148,13 +161,12 @@ body {
 
 #feedback-area {
     margin-top: 25px;
-    /* min-height を調整して、解説文の長さに対応しつつボタンのためのスペースを確保 */
     min-height: 150px;
     text-align: left;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    flex-grow: 1; /* 残りのスペースを埋めることで、ボタンを下に押し出す */
+    flex-grow: 1;
 }
 
 #result-text {
@@ -194,9 +206,9 @@ body {
     cursor: pointer;
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
-    margin-top: 20px; /* 他の要素との間隔を調整 */
-    display: none; /* 初期状態では非表示 */
-    flex-shrink: 0; /* ボタン自体は縮まないようにする */
+    margin-top: 20px;
+    display: none;
+    flex-shrink: 0;
 }
 
 #next-question-button:hover {
@@ -255,7 +267,7 @@ body {
     #quiz-container {
         padding: 25px;
         width: 95%;
-        min-height: 600px; /* モバイルでの最低高さを調整 */
+        min-height: 600px;
     }
     #cover-page h1 {
         font-size: 3em;
@@ -268,14 +280,14 @@ body {
         font-size: 1.5em;
     }
     #choices-container {
-        gap: 15px; /* モバイルでは少し間隔を狭める */
+        gap: 15px;
     }
     .choice-button {
         font-size: 1.1em;
         padding: 15px 20px;
     }
     #feedback-area {
-        min-height: 120px; /* モバイルでの解説エリアの最低高さ */
+        min-height: 120px;
     }
     #explanation-text {
         padding: 15px;
@@ -284,7 +296,7 @@ body {
     #next-question-button {
         font-size: 1.1em;
         padding: 12px 25px;
-        margin-top: 15px; /* モバイルでのマージン調整 */
+        margin-top: 15px;
     }
     #final-page #final-message {
         font-size: 3em;
