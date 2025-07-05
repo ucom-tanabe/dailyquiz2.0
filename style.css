@@ -1,9 +1,10 @@
-/* Google Fonts の読み込み */
+/* Google Fonts の読み込みはそのまま */
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Kosugi+Maru&display=swap');
 
 body {
     font-family: 'M PLUS Rounded 1c', 'Kosugi Maru', sans-serif;
-    background: linear-gradient(135deg, #FFDAB9, #ADD8E6); /* パステルカラーのグラデーション */
+    /* ジャマイカ国旗をイメージしたグラデーション */
+    background: linear-gradient(135deg, #009246, #FCD116, #000000); /* 緑、黄、黒 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,18 +15,18 @@ body {
 }
 
 #quiz-container {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.95); /* 透明度を少し下げて明るく */
+    border-radius: 25px; /* 角をさらに丸く */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2); /* 影を強調 */
+    padding: 35px;
     width: 90%;
-    max-width: 600px;
+    max-width: 650px; /* 少し広げる */
     text-align: center;
     position: relative;
-    overflow: hidden; /* ページ切り替え時のため */
+    overflow: hidden;
 }
 
-/* ページ共通スタイル */
+/* ページ共通スタイルはそのまま */
 .page {
     display: none;
     animation: fadeIn 0.8s ease-out forwards;
@@ -42,190 +43,220 @@ body {
 
 /* --- 表紙ページ --- */
 #cover-page h1 {
-    font-size: 3.5em;
-    color: #FF6347; /* オレンジレッド */
-    margin-bottom: 50px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    font-size: 4em; /* さらに大きく */
+    color: #009246; /* ジャマイカの緑 */
+    margin-bottom: 60px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.2); /* 影を強調 */
 }
 
 #start-button {
-    padding: 18px 40px;
-    font-size: 1.8em;
+    padding: 20px 45px; /* ボタンを大きく */
+    font-size: 2em; /* 文字も大きく */
     font-weight: bold;
-    color: #FFFFFF;
-    background-color: #FF1493; /* ディープピンク */
+    color: #000000; /* 黒字にする */
+    background-color: #FCD116; /* ジャマイカの黄色 */
     border: none;
-    border-radius: 40px;
+    border-radius: 45px; /* さらに丸く */
     cursor: pointer;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
     transition: all 0.3s ease;
-    letter-spacing: 2px;
+    letter-spacing: 3px; /* 文字間隔を広げる */
 }
 
 #start-button:hover {
-    background-color: #C71585; /* 少し濃いピンク */
-    transform: translateY(-3px);
-    box-shadow: 0 12px 20px rgba(0,0,0,0.25);
+    background-color: #E2B800; /* 少し濃い黄色 */
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.35);
 }
 
 /* --- 問題ページ --- */
 #question-text {
-    font-size: 1.6em;
-    margin-bottom: 30px;
-    color: #4682B4; /* スチールブルー */
-    line-height: 1.5;
+    font-size: 1.8em; /* 少し大きく */
+    margin-bottom: 35px;
+    color: #000000; /* 黒 */
+    line-height: 1.6;
+    background-color: rgba(255, 255, 255, 0.8); /* 少し背景色を追加 */
+    padding: 15px;
+    border-radius: 10px;
 }
 
 #choices-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 25px;
+    gap: 18px; /* 間隔を広げる */
+    margin-bottom: 30px;
 }
 
 .choice-button {
     width: 100%;
-    padding: 15px 20px;
-    font-size: 1.2em;
+    padding: 18px 25px; /* ボタンを大きく */
+    font-size: 1.3em; /* 文字を大きく */
     text-align: left;
-    background-color: #FFE4B5; /* ミルキーオレンジ */
+    background-color: #c7f2f1; /* 明るいターコイズ系 */
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
-    color: #555;
-    word-wrap: break-word; /* 長い選択肢の折り返し */
+    color: #333;
+    word-wrap: break-word;
 }
 
-.choice-button:hover {
-    background-color: #FFDDC1;
-    transform: translateY(-2px);
+.choice-button:hover:not(.selected) { /* 選択済みのボタンはホバーしない */
+    background-color: #aae0df;
+    transform: translateY(-3px);
 }
 
 .choice-button.selected {
     cursor: default; /* 再選択不可 */
+    opacity: 0.8; /* 選択済みは少し透過 */
 }
 
 /* 正解・不正解時のスタイル */
 .choice-button.correct {
-    background-color: #90EE90; /* ライトグリーン */
-    color: #228B22; /* フォレストグリーン */
+    background-color: #4CAF50; /* 緑 */
+    color: #FFFFFF; /* 白文字 */
     font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0,200,0,0.2);
+    box-shadow: 0 5px 10px rgba(0,150,0,0.3);
 }
 
 .choice-button.incorrect {
-    background-color: #FFB6C1; /* ライトピンク */
-    color: #B22222; /* ファイヤーブリック */
+    background-color: #FF5252; /* 赤 */
+    color: #FFFFFF; /* 白文字 */
     font-weight: bold;
-    box-shadow: 0 4px 8px rgba(200,0,0,0.2);
+    box-shadow: 0 5px 10px rgba(150,0,0,0.3);
 }
 
 #feedback-area {
-    margin-top: 20px;
-    min-height: 100px; /* 解説表示のためのスペース確保 */
+    margin-top: 25px;
+    min-height: 120px; /* 解説表示のためのスペースを増やす */
+    text-align: left;
 }
 
 #result-text {
-    font-size: 1.5em;
+    font-size: 1.8em; /* 大きく */
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 #result-text.correct-feedback {
-    color: #32CD32; /* ライムグリーン */
+    color: #009246; /* ジャマイカの緑 */
 }
 
 #result-text.incorrect-feedback {
-    color: #FF4500; /* オレンジレッド */
+    color: #FF5252; /* 赤 */
 }
 
 #explanation-text {
-    font-size: 1.1em;
+    font-size: 1.2em; /* 少し大きく */
     color: #555;
-    line-height: 1.6;
-    text-align: left;
-    background-color: #F8F8F8;
-    border-left: 5px solid #87CEEB; /* スカイブルー */
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 15px;
+    line-height: 1.7;
+    background-color: #F0F8FF; /* アリスブルー */
+    border-left: 6px solid #FCD116; /* ジャマイカの黄色 */
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
 }
 
-
-/* --- 最終ページ --- */
-#final-page #final-message {
-    font-size: 3em;
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
-#final-page #final-message.win {
-    color: #3CB371; /* ミディアムシークールグリーン */
-    text-shadow: 2px 2px 5px rgba(0,100,0,0.2);
-}
-
-#final-page #final-message.lose {
-    color: #FF6347; /* オレンジレッド */
-    text-shadow: 2px 2px 5px rgba(100,0,0,0.2);
-}
-
-#attempts-count {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #6A5ACD; /* スレートブルー */
-    margin-bottom: 40px;
-    display: block;
-}
-
-#retry-button {
-    padding: 15px 35px;
-    font-size: 1.5em;
+/* --- 次へボタン --- */
+#next-question-button {
+    padding: 15px 30px;
+    font-size: 1.3em;
     font-weight: bold;
     color: #FFFFFF;
-    background-color: #6A5ACD; /* スレートブルー */
+    background-color: #000000; /* 黒 */
     border: none;
     border-radius: 30px;
     cursor: pointer;
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
+    margin-top: 20px; /* 上部にスペース */
+    display: none; /* 初期状態では非表示 */
 }
 
-#retry-button:hover {
-    background-color: #483D8B; /* 少し濃いスレートブルー */
+#next-question-button:hover {
+    background-color: #333333;
     transform: translateY(-2px);
     box-shadow: 0 9px 18px rgba(0,0,0,0.25);
 }
 
-/* レスポンシブ対応 */
+
+/* --- 最終ページ --- */
+#final-page #final-message {
+    font-size: 3.5em; /* 少し大きく */
+    font-weight: bold;
+    margin-bottom: 20px; /* 間隔を調整 */
+}
+
+#final-page #final-message.win {
+    color: #009246; /* ジャマイカの緑 */
+    text-shadow: 2px 2px 5px rgba(0,100,0,0.2);
+}
+
+#final-page #final-message.lose {
+    color: #FF5252; /* 赤 */
+    text-shadow: 2px 2px 5px rgba(100,0,0,0.2);
+}
+
+#attempts-count {
+    font-size: 1.8em; /* 大きく */
+    font-weight: bold;
+    color: #000000; /* 黒 */
+    margin-bottom: 40px;
+    display: block; /* 1行表示を保証 */
+}
+
+#retry-button {
+    padding: 18px 38px; /* ボタンを大きく */
+    font-size: 1.8em; /* 文字を大きく */
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #FCD116; /* ジャマイカの黄色 */
+    border: none;
+    border-radius: 35px; /* さらに丸く */
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+}
+
+#retry-button:hover {
+    background-color: #E2B800; /* 少し濃い黄色 */
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.35);
+}
+
+/* レスポンシブ対応は適宜調整 */
 @media (max-width: 768px) {
     #quiz-container {
-        padding: 20px;
+        padding: 25px;
         width: 95%;
     }
     #cover-page h1 {
-        font-size: 2.5em;
+        font-size: 3em;
     }
     #start-button {
-        font-size: 1.5em;
-        padding: 15px 30px;
+        font-size: 1.8em;
+        padding: 18px 35px;
     }
     #question-text {
-        font-size: 1.3em;
+        font-size: 1.5em;
     }
     .choice-button {
-        font-size: 1em;
-        padding: 12px 15px;
+        font-size: 1.1em;
+        padding: 15px 20px;
+    }
+    #next-question-button {
+        font-size: 1.1em;
+        padding: 12px 25px;
     }
     #final-page #final-message {
-        font-size: 2.5em;
+        font-size: 3em;
     }
     #attempts-count {
-        font-size: 1.2em;
+        font-size: 1.5em;
     }
     #retry-button {
-        font-size: 1.3em;
-        padding: 12px 25px;
+        font-size: 1.5em;
+        padding: 15px 30px;
     }
 }
