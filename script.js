@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // DOM要素の取得
+    const quizContainer = document.getElementById('quiz-container'); // コンテナも取得
     const coverPage = document.getElementById('cover-page');
     const startButton = document.getElementById('start-button');
     const questionPage = document.getElementById('question-page');
@@ -53,36 +54,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentQuestionIndex = 0;
     let attemptsCount = 0;
-    let quizCompletedSuccessfully = true; // クイズ全体を通して正解しているかどうかのフラグ
+    let quizCompletedSuccessfully = true;
 
     // --- ページの表示・非表示を制御する関数 ---
     function showPage(pageToShow) {
         const pages = document.querySelectorAll('.page');
         pages.forEach(page => {
-            page.classList.remove('active'); // すべてのページからactiveクラスを削除
-            // アニメーションが完了する前にdisplay:noneするとアニメーションが見えないので、
-            // opacityが0になった後にdisplay:noneにする
-            page.addEventListener('transitionend', function handler() {
-                if (!this.classList.contains('active')) {
-                    this.style.display = 'none';
-                }
-                this.removeEventListener('transitionend', handler);
-            });
-            page.style.opacity = '0'; // フェードアウト開始
+            page.classList.remove('active'); // activeクラスを削除
+            page.style.display = 'none'; // 非表示にする
         });
 
-        // 表示するページにactiveクラスを追加し、display:flexに設定してフェードイン開始
-        pageToShow.style.display = 'flex'; // 先にdisplayを設定
-        setTimeout(() => { // 少し遅延させてtransitionが適用されるようにする
+        // 指定されたページを表示
+        pageToShow.style.display = 'flex'; // Flexboxとして表示
+        setTimeout(() => { // 少し遅延させてopacityとtransformのtransitionが適用されるようにする
             pageToShow.classList.add('active');
         }, 10);
+
+        // コンテナの高さをページのコンテンツに合わせて調整
+        // quizContainer.style.height = pageToShow.offsetHeight + 'px'; // この行はコメントアウトまたは削除
     }
 
     // --- クイズの開始 ---
     startButton.addEventListener('click', () => {
-        attemptsCount++; // 挑戦回数を増やす
-        currentQuestionIndex = 0; // 最初の問題から開始
-        quizCompletedSuccessfully = true; // 新しい挑戦なので、最初は成功とみなす
+        attemptsCount++;
+        currentQuestionIndex = 0;
+        quizCompletedSuccessfully = true;
         loadQuestion();
         showPage(questionPage);
     });
@@ -91,20 +87,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadQuestion() {
         const q = questions[currentQuestionIndex];
         questionText.textContent = `問題${currentQuestionIndex + 1}：\n${q.question}`;
-        choicesContainer.innerHTML = ''; // 選択肢をクリア
+        choicesContainer.innerHTML = '';
 
-        // フィードバックエリアと「次へ」ボタンをリセット
         resultText.textContent = '';
         resultText.classList.remove('correct-feedback', 'incorrect-feedback');
         explanationText.textContent = '';
-        feedbackArea.style.display = 'none'; // 非表示にする
-        nextQuestionButton.style.display = 'none'; // 「次へ」ボタンも非表示にする
+        feedbackArea.style.display = 'none';
+        nextQuestionButton.style.display = 'none';
 
         q.choices.forEach((choice, index) => {
             const button = document.createElement('button');
             button.textContent = choice;
             button.classList.add('choice-button');
-            button.dataset.index = index; // 選択肢のインデックスをデータ属性に保存
+            button.dataset.index = index;
             button.addEventListener('click', handleChoiceClick);
             choicesContainer.appendChild(button);
         });
@@ -112,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 選択肢クリック時の処理 ---
     function handleChoiceClick(event) {
-        // すでに選択済み（selectedクラスがある）の場合は再選択不可
         if (event.target.classList.contains('selected')) {
             return;
         }
@@ -121,12 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedIndex = parseInt(selectedButton.dataset.index);
         const q = questions[currentQuestionIndex];
 
-        // すべての選択肢ボタンを非アクティブ化（再選択不可にするため）
         const allChoiceButtons = choicesContainer.querySelectorAll('.choice-button');
-        allChoiceButtons.forEach(button => button.classList.add('selected')); // selectedクラスを追加
+        allChoiceButtons.forEach(button => button.classList.add('selected'));
 
-        // 正誤判定と表示
-        feedbackArea.style.display = 'block'; // フィードバックエリアを表示
+        feedbackArea.style.display = 'block';
         if (selectedIndex === q.correctAnswer) {
             selectedButton.classList.add('correct');
             resultText.textContent = '正解！';
@@ -135,13 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedButton.classList.add('incorrect');
             resultText.textContent = '不正解...';
             resultText.classList.add('incorrect-feedback');
-            // 正しい選択肢も強調表示
             allChoiceButtons[q.correctAnswer].classList.add('correct');
-            quizCompletedSuccessfully = false; // 不正解があったらフラグをfalseにする
+            quizCompletedSuccessfully = false;
         }
         explanationText.textContent = `解説：${q.explanation}`;
 
-        // 正誤判定と解説が表示されたら「次へ」ボタンを表示
         nextQuestionButton.style.display = 'block';
     }
 
@@ -166,16 +156,15 @@ document.addEventListener('DOMContentLoaded', () => {
             finalMessage.classList.add('lose');
             finalMessage.classList.remove('win');
         }
-        attemptsCountSpan.textContent = attemptsCount; // ここで挑戦回数を表示
+        attemptsCountSpan.textContent = attemptsCount;
         showPage(finalPage);
     }
 
     // --- 再挑戦ボタンの処理 ---
     retryButton.addEventListener('click', () => {
-        // すべての状態をリセットして表紙に戻る
         currentQuestionIndex = 0;
-        quizCompletedSuccessfully = true; // リセット
-        finalMessage.classList.remove('win', 'lose'); // クラスをリセット
+        quizCompletedSuccessfully = true;
+        finalMessage.classList.remove('win', 'lose');
         showPage(coverPage);
     });
 
