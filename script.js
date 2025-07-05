@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const choicesContainer = document.getElementById('choices-container');
     const feedbackArea = document.getElementById('feedback-area');
     const resultText = document.getElementById('result-text');
-    const explanationText = document.getElementById('explanation-text');
+    const explanationText = document = document.getElementById('explanation-text'); // ここも修正
     const nextQuestionButton = document.getElementById('next-question-button');
     const finalPage = document.getElementById('final-page');
     const finalMessage = document.getElementById('final-message');
     const attemptsCountSpan = document.getElementById('attempts-count');
     const retryButton = document.getElementById('retry-button');
 
-    // クイズの問題データ: 3問目を1問目に表示させるように変更
+    // クイズの問題データ (変更なし)
     const questions = [
         {
             question: "福祉用具専門相談員が利用者宅を訪問する際の適切な対応として、最も優先すべきものは次のうちどれでしょう？",
@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
             correctAnswer: 1, // 0から始まるインデックス
             explanation: "福祉用具専門相談員は、利用者の自立支援を目的として、その心身の状況、生活環境、家族の介護状況等を把握し、適切な福祉用具を選定することが最も重要です。カタログ提示や自社製品の強調、契約説明はその後に行うべきものです。"
         }
-        // 他の問題は削除済みなので、この1問だけが残ります
     ];
 
     let currentQuestionIndex = 0;
@@ -80,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 選択肢クリック時の処理 (変更なし) ---
+    // --- 選択肢クリック時の処理 ---
     function handleChoiceClick(event) {
         if (event.target.classList.contains('selected')) {
             return;
@@ -91,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const q = questions[currentQuestionIndex];
 
         const allChoiceButtons = choicesContainer.querySelectorAll('.choice-button');
-        allChoiceButtons.forEach(button => button.classList.add('selected'));
+        allChoiceButtons.forEach(button => button.classList.add('selected')); // 選択した選択肢の再クリックを防ぐため、すべてのボタンにselectedクラスを追加
 
         feedbackArea.style.display = 'block';
         if (selectedIndex === q.correctAnswer) {
@@ -102,7 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedButton.classList.add('incorrect');
             resultText.textContent = '不正解...';
             resultText.classList.add('incorrect-feedback');
-            allChoiceButtons[q.correctAnswer].classList.add('correct');
+            // ここが変更点: 正しい選択肢を強調表示する行を削除しました
+            // allChoiceButtons[q.correctAnswer].classList.add('correct'); 
             quizCompletedSuccessfully = false;
         }
         explanationText.textContent = `解説：${q.explanation}`;
