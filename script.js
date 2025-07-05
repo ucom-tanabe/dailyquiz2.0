@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedbackArea = document.getElementById('feedback-area');
     const resultText = document.getElementById('result-text');
     const explanationText = document.getElementById('explanation-text');
-    const nextQuestionButton = document.getElementById('next-question-button'); // 「次へ」ボタンを追加
+    const nextQuestionButton = document.getElementById('next-question-button');
     const finalPage = document.getElementById('final-page');
     const finalMessage = document.getElementById('final-message');
     const attemptsCountSpan = document.getElementById('attempts-count');
@@ -58,8 +58,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ページの表示・非表示を制御する関数 ---
     function showPage(pageToShow) {
         const pages = document.querySelectorAll('.page');
-        pages.forEach(page => page.classList.remove('active'));
-        pageToShow.classList.add('active');
+        pages.forEach(page => {
+            page.classList.remove('active'); // すべてのページからactiveクラスを削除
+            // アニメーションが完了する前にdisplay:noneするとアニメーションが見えないので、
+            // opacityが0になった後にdisplay:noneにする
+            page.addEventListener('transitionend', function handler() {
+                if (!this.classList.contains('active')) {
+                    this.style.display = 'none';
+                }
+                this.removeEventListener('transitionend', handler);
+            });
+            page.style.opacity = '0'; // フェードアウト開始
+        });
+
+        // 表示するページにactiveクラスを追加し、display:flexに設定してフェードイン開始
+        pageToShow.style.display = 'flex'; // 先にdisplayを設定
+        setTimeout(() => { // 少し遅延させてtransitionが適用されるようにする
+            pageToShow.classList.add('active');
+        }, 10);
     }
 
     // --- クイズの開始 ---
