@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>デイリークイズ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Kosugi+Maru&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="cover-page" class="page active">
+            <h1>デイリークイズ</h1>
+            <button id="start-button">めんそ～れ～♪</button>
+        </div>
+
+        <div id="question-page" class="page">
+            <h2 id="question-text"></h2>
+            <div id="choices-container">
+                </div>
+            <div id="feedback-area">
+                <p id="result-text"></p>
+                <p id="explanation-text"></p>
+            </div>
+        </div>
+
+        <div id="final-page" class="page">
+            <p id="final-message"></p>
+            <p>挑戦回数: <span id="attempts-count">0</span>回</p>
+            <button id="retry-button">もう一度挑戦する！</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
