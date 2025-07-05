@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ... (DOM要素の取得部分は変更なし) ...
+    // DOM要素の取得 (変更なし)
     const quizContainer = document.getElementById('quiz-container');
     const coverPage = document.getElementById('cover-page');
     const startButton = document.getElementById('start-button');
@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const attemptsCountSpan = document.getElementById('attempts-count');
     const retryButton = document.getElementById('retry-button');
 
-
     // クイズの問題データは外部ファイルから読み込むように変更
     let questions = []; // 初期化
 
@@ -29,25 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('questions.json'); // questions.jsonを読み込み
             const allQuestions = await response.json();
 
-            // 今日の日付に基づいて問題をフィルタリング
-            const today = new Date();
-            // 日本時間に調整 (例: JST UTC+9)
-            const offset = today.getTimezoneOffset() * 60 * 1000; // ミリ秒単位のオフセット
-            const jstDate = new Date(today.getTime() + (9 * 60 * 60 * 1000) + offset);
-
-            const year = jstDate.getFullYear();
-            const month = String(jstDate.getMonth() + 1).padStart(2, '0');
-            const day = String(jstDate.getDate()).padStart(2, '0');
-            const todayId = `${year}${month}${day}`;
-
-            const questionForToday = allQuestions.find(q => q.id === todayId);
-
-            if (questionForToday) {
-                questions = [questionForToday]; // 今日の問題だけをquestions配列に入れる
+            // JSONファイルから読み込んだ最初の問題のみを使用
+            if (allQuestions.length > 0) {
+                questions = [allQuestions[0]];
             } else {
-                // 今日の問題が見つからない場合のフォールバック（例：最初の一つを使う、エラーメッセージを出すなど）
-                console.warn(`今日 (${todayId}) の問題が見つかりませんでした。最初の問題を表示します。`);
-                questions = [allQuestions[0]]; // またはエラー表示
+                console.error('questions.jsonに問題が定義されていません。');
+                quizContainer.innerHTML = '<p style="color: red;">問題の読み込みに失敗しました。問題ファイルを確認してください。</p>';
+                return; // 問題がない場合は処理を中断
             }
 
             // 問題が読み込まれたら最初のページを表示
@@ -55,11 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('問題の読み込みに失敗しました:', error);
-            // エラーメッセージを表示するなどの処理
             quizContainer.innerHTML = '<p style="color: red;">クイズの読み込みに失敗しました。時間をおいて再度お試しください。</p>';
         }
     }
-
 
     // --- ページの表示・非表示を制御する関数 (変更なし) ---
     function showPage(pageToShow) {
@@ -80,20 +65,21 @@ document.addEventListener('DOMContentLoaded', () => {
         attemptsCount++;
         currentQuestionIndex = 0;
         quizCompletedSuccessfully = true;
-        loadQuestionContent(); // ここを修正: loadQuestionContent() を呼び出す
+        loadQuestionContent();
         showPage(questionPage);
     });
 
     // --- 問題の読み込みと表示 (関数名を変更) ---
-    function loadQuestionContent() { // 関数名を変更しました
+    function loadQuestionContent() {
         const q = questions[currentQuestionIndex];
-        if (!q) { // 問題が定義されていない場合のガード
+        if (!q) {
             console.error("問題が見つかりません。");
             quizContainer.innerHTML = '<p style="color: red;">問題の表示に失敗しました。設定を確認してください。</p>';
             return;
         }
 
-        questionText.textContent = `問題：\n${q.question}`; // 「問題1：」を削除
+        // ここを修正: 「問題：」を削除し、問題文だけを表示
+        questionText.textContent = q.question;
         choicesContainer.innerHTML = '';
 
         resultText.textContent = '';
